@@ -1,0 +1,14 @@
+{
+  "lockfileVersion": 1,
+  "workspaces": {
+    "": {
+      "name": "@bulatlib/res-examples",
+      "dependencies": {
+        "@bulatlib/res": "../pack/bulatlib-res-0.0.1.tgz",
+      },
+    },
+  },
+  "packages": {
+    "@bulatlib/res": ["@bulatlib/res@../pack/bulatlib-res-0.0.1.tgz", {}],
+  }
+}

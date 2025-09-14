@@ -1,0 +1,12 @@
+{
+  "name": "@bulatlib/res-examples",
+  "private": true,
+  "scripts": {
+    "reinstall-di": "bun rm @bulatlib/res && bun pm cache rm && bun add ../pack/bulatlib-res-0.0.1.tgz",
+    "basic": "bun run ./src/basic.ts"
+  },
+  "type": "module",
+  "dependencies": {
+    "@bulatlib/res": "../pack/bulatlib-res-0.0.1.tgz"
+  }
+}
