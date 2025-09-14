@@ -4,11 +4,11 @@
     "": {
       "name": "@bulatlib/res-examples",
       "dependencies": {
-        "@bulatlib/res": "../pack/bulatlib-res-0.0.2.tgz",
+        "@bulatlib/res": "../pack/bulatlib-res-0.0.3.tgz",
       },
     },
   },
   "packages": {
-    "@bulatlib/res": ["@bulatlib/res@../pack/bulatlib-res-0.0.2.tgz", {}],
+    "@bulatlib/res": ["@bulatlib/res@../pack/bulatlib-res-0.0.3.tgz", {}],
   }
 }
