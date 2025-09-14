@@ -36,6 +36,12 @@ import {
   err,
   cover,
   coverAsync,
+  map,
+  mapAsync,
+  mapOk,
+  mapErr,
+  mapOkAsync,
+  mapErrAsync,
   type Res,
   type ResAsync,
 } from '@bulatlib/res';
@@ -44,8 +50,13 @@ import {
 - `ok<T>(value: T): Res<T, never>`: create a successful result.
 - `err<E>(error: E): Res<never, E>`: create an error result.
 - `cover<T>(fn: () => T): Res<T, Error>`: run a function and capture thrown values.
-  - Non-Error throws are converted to `Error(String(value))`.
 - `coverAsync<T>(fn: () => Promise<T>): ResAsync<T, Error>`: async version of `cover`.
+- `map(res, { ok?, err? })`: transform `ok` and/or `err` branches.
+- `mapOk(res, okHandler)`: transform only the `ok` branch.
+- `mapErr(res, errHandler)`: transform only the `err` branch.
+- `mapAsync(resPromise, { ok?, err? })`: async version of `map`.
+- `mapOkAsync(resPromise, okHandler)`: async version of `mapOk`.
+- `mapErrAsync(resPromise, errHandler)`: async version of `mapErr`.
 
 Type definitions:
 
@@ -82,22 +93,43 @@ if ('ok' in res) {
 }
 ```
 
-Manual construction:
+Map helpers (sync):
 
 ```ts
-import { ok, err } from '@bulatlib/res';
+import { ok, err, map, mapOk, mapErr } from '@bulatlib/res';
 
-const good = ok({ id: 1 });
-const bad = err(new Error('not found'));
+const a = map(ok(2), { ok: (n) => n * 2 }); // { ok: 4 }
+const b = map(err(new Error('x')), {
+  err: (e) => new Error('wrap:' + e.message),
+});
+
+const c = mapOk(ok(5), (n) => n + 1); // { ok: 6 }
+const d = mapErr(err('oops'), (s) => 'wrapped:' + s); // { err: 'wrapped:oops' }
+```
+
+Map helpers (async):
+
+```ts
+import { ok, err, mapAsync, mapOkAsync, mapErrAsync } from '@bulatlib/res';
+
+const a = await mapAsync(Promise.resolve(ok(3)), { ok: (n) => n - 1 }); // { ok: 2 }
+const b = await mapAsync(Promise.resolve(err('e')), { err: (s) => 'x:' + s }); // { err: 'x:e' }
+
+const c = await mapOkAsync(Promise.resolve(ok(10)), (n) => n * 3); // { ok: 30 }
+const d = await mapErrAsync(
+  Promise.resolve(err(new Error('z'))),
+  (e) => new Error('y:' + e.message),
+);
 ```
 
 Namespace import (optional):
 
 ```ts
-import * as r from '@bulatlib/res';
+import { res } from '@bulatlib/res';
 
-const a = r.ok(1);
-const b = await r.coverAsync(async () => 2);
+const a = res.ok(1);
+const b = await res.coverAsync(async () => 2);
+const c = res.map(a, { ok: (x) => x + 1 });
 ```
 
 ### Tips
