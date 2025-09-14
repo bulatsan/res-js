@@ -1,7 +1,7 @@
 {
   "name": "@bulatlib/res",
   "author": "bulatsan",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "A simple result pattern implementation",
   "license": "MIT",
   "private": false,
@@ -35,6 +35,7 @@
   "scripts": {
     "test": "vitest run",
     "build": "tsc -b && vite build -c vite.config.ts",
+    "b": "tsc -b && vite build -c vite.config.ts",
     "pack": "rm -rf pack && bun pm cache rm && bun run build && mkdir -p pack && npm pack --pack-destination ./pack",
     "fmt": "prettier --write ."
   },
