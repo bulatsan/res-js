@@ -8,7 +8,6 @@ export * from './map';
 export * from './map-err';
 export * from './map-or';
 export * from './map-or-else';
-export * from './unwrap';
 export * from './unwrap-or';
 export * from './unwrap-or-else';
 export * from './match';

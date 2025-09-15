@@ -12,7 +12,7 @@ describe('and-then', () => {
 
   it('[err] andThen fn[ok or err] -> [err]; fn ignored', () => {
     const fn = vi.fn(MAP_OK);
-    const r = andThen(ERR, fn).res();
+    const r = andThen(ERR, fn);
 
     expect(r).toEqual(ERR);
     expect(fn).not.toHaveBeenCalled();
@@ -20,7 +20,7 @@ describe('and-then', () => {
 
   it('[ok] andThen fn[err] -> [err]', () => {
     const fn = vi.fn(MAP_ERR);
-    const r = andThen(OK, fn).res();
+    const r = andThen(OK, fn);
 
     expect(r).toEqual(err(new Error('error')));
     expect(fn).toHaveBeenCalledTimes(1);
@@ -30,7 +30,7 @@ describe('and-then', () => {
   it('[ok] andThen fn[another ok] -> [another ok]', () => {
     const fn = vi.fn(MAP_OK);
 
-    const r = andThen(OK, fn).res();
+    const r = andThen(OK, fn);
 
     expect(r).toEqual(ok(2));
     expect(fn).toHaveBeenCalledTimes(1);
@@ -39,7 +39,7 @@ describe('and-then', () => {
 
   it('[ok] andThen fn[another type ok] -> [another type ok]', () => {
     const fn = vi.fn((_) => ok('another type'));
-    const r = andThen(OK, fn).res();
+    const r = andThen(OK, fn);
 
     expect(r).toEqual(ok('another type'));
     expect(fn).toHaveBeenCalledTimes(1);

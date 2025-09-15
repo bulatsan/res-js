@@ -12,7 +12,7 @@ describe('mapOr', () => {
 
   it('[ok] mapOr default, fn -> fn(ok)', () => {
     const fn = vi.fn(MAP_TO_2);
-    const r = mapOr(OK, DEFAULT, fn).res();
+    const r = mapOr(OK, DEFAULT, fn);
 
     expect(r).toEqual(ok(2));
     expect(fn).toHaveBeenCalledTimes(1);
@@ -21,7 +21,7 @@ describe('mapOr', () => {
 
   it('[err] mapOr default, fn -> default', () => {
     const fn = vi.fn(MAP_TO_2);
-    const r = mapOr(ERR, DEFAULT, fn).res();
+    const r = mapOr(ERR, DEFAULT, fn);
 
     expect(r).toEqual(ok(DEFAULT));
     expect(fn).not.toHaveBeenCalled();

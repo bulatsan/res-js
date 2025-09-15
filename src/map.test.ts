@@ -11,7 +11,7 @@ describe('map', () => {
 
   it('[err] map fn -> [err]; fn ignored', () => {
     const fn = vi.fn(MAP_TO_2);
-    const r = map(ERR, fn).res();
+    const r = map(ERR, fn);
 
     expect(r).toEqual(ERR);
     expect(fn).not.toHaveBeenCalled();
@@ -19,7 +19,7 @@ describe('map', () => {
 
   it('[ok] map fn[another ok] -> [another ok]', () => {
     const fn = vi.fn(MAP_TO_2);
-    const r = map(OK, fn).res();
+    const r = map(OK, fn);
 
     expect(r).toEqual(ok(2));
     expect(fn).toHaveBeenCalledTimes(1);
@@ -28,7 +28,7 @@ describe('map', () => {
 
   it('[ok] map fn[another type ok] -> [another type ok]', () => {
     const fn = vi.fn((_) => 'another type');
-    const r = map(OK, fn).res();
+    const r = map(OK, fn);
 
     expect(r).toEqual(ok('another type'));
     expect(fn).toHaveBeenCalledTimes(1);

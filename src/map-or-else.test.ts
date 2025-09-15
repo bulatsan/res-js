@@ -13,7 +13,7 @@ describe('mapOrElse', () => {
   it('[ok] mapOrElse defaultFn, fn -> fn(ok)', () => {
     const d = vi.fn(DEFAULT);
     const f = vi.fn(MAP);
-    const r = mapOrElse(OK, d, f).res();
+    const r = mapOrElse(OK, d, f);
 
     expect(r).toEqual(ok('V:1'));
     expect(f).toHaveBeenCalledTimes(1);
@@ -24,7 +24,7 @@ describe('mapOrElse', () => {
   it('[err] mapOrElse defaultFn, fn -> defaultFn(err)', () => {
     const d = vi.fn(DEFAULT);
     const f = vi.fn(MAP);
-    const r = mapOrElse(ERR, d, f).res();
+    const r = mapOrElse(ERR, d, f);
 
     expect(r).toEqual(ok('E:error'));
     expect(d).toHaveBeenCalledTimes(1);

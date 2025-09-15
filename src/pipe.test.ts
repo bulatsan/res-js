@@ -133,16 +133,6 @@ describe('pipe', () => {
     });
   });
 
-  describe('unwrap', () => {
-    it('[ok] unwrap -> value', () => {
-      expect(pipe(OK).unwrap()).toBe(1);
-    });
-
-    it('[err] unwrap -> throw', () => {
-      expect(() => pipe(ERR).unwrap()).toThrow(ERROR);
-    });
-  });
-
   describe('unwrapOr', () => {
     it('[ok] unwrapOr default -> ok', () => {
       expect(pipe(OK).unwrapOr(10)).toBe(1);
@@ -254,13 +244,13 @@ describe('pipe', () => {
       const v = pipe(ok(1))
         .map((x) => x + 1)
         .and(ok(10))
-        .unwrap();
+        .unwrapOr(0);
       expect(v).toBe(10);
 
       const v2 = pipe(ERR)
         .orElse((_e) => ok(5))
         .map((x) => x * 2)
-        .unwrap();
+        .unwrapOr(0);
       expect(v2).toBe(10);
     });
   });

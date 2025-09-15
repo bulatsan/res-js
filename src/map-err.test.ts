@@ -11,7 +11,7 @@ describe('mapErr', () => {
 
   it('[ok] mapErr fn -> [ok]; fn ignored', () => {
     const fn = vi.fn(WRAP);
-    const r = mapErr(OK, fn).res();
+    const r = mapErr(OK, fn);
 
     expect(r).toEqual(OK);
     expect(fn).not.toHaveBeenCalled();
@@ -19,7 +19,7 @@ describe('mapErr', () => {
 
   it('[err] mapErr fn -> [mapped err]', () => {
     const fn = vi.fn(WRAP);
-    const r = mapErr(ERR, fn).res();
+    const r = mapErr(ERR, fn);
 
     expect(r).toEqual(err(new Error('wrapped: error')));
     expect(fn).toHaveBeenCalledTimes(1);

@@ -10,18 +10,18 @@ describe('or', () => {
   const ERR_LATE = err(new Error('late error'));
 
   it('[err] or [another err] -> [another err]', () => {
-    expect(or(ERR, ERR_LATE).res()).toEqual(ERR_LATE);
+    expect(or(ERR, ERR_LATE)).toEqual(ERR_LATE);
   });
 
   it('[err] or [ok] -> [ok]', () => {
-    expect(or(ERR, OK).res()).toEqual(OK);
+    expect(or(ERR, OK)).toEqual(OK);
   });
 
   it('[ok] or [err] -> [ok]', () => {
-    expect(or(OK, ERR).res()).toEqual(OK);
+    expect(or(OK, ERR)).toEqual(OK);
   });
 
   it('[ok] or [another ok] -> [ok]', () => {
-    expect(or(OK, OK_2).res()).toEqual(OK);
+    expect(or(OK, OK_2)).toEqual(OK);
   });
 });

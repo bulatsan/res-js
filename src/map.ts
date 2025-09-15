@@ -1,13 +1,10 @@
 import { match } from './match';
-import { type Pipe, pipe } from './pipe';
 import { type Res, err, ok } from './res';
 
-export function map<IT, OT>(self: Res<IT>, fn: (data: IT) => OT): Pipe<OT> {
-  return pipe(
-    match(
-      self,
-      (_ok) => ok(fn(_ok)),
-      (_err) => err(_err),
-    ),
+export function map<IT, OT>(self: Res<IT>, fn: (data: IT) => OT): Res<OT> {
+  return match(
+    self,
+    (_ok) => ok(fn(_ok)),
+    (_err) => err(_err),
   );
 }

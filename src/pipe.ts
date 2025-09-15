@@ -8,7 +8,6 @@ import { match } from './match';
 import { or } from './or';
 import { orElse } from './or-else';
 import { type Res } from './res';
-import { unwrap } from './unwrap';
 import { unwrapOr } from './unwrap-or';
 import { unwrapOrElse } from './unwrap-or-else';
 
@@ -39,9 +38,6 @@ export type Pipe<IT> = Res<IT> & {
   // acts like a or() but evaluates the function only if the result is err
   orElse(fn: (err: Error) => Res<IT>): Pipe<IT>;
 
-  // unwrap the value of the result if it is ok, otherwise throws the error
-  unwrap(): IT;
-
   // returns the value of the result if it is ok, otherwise returns the default value
   unwrapOr(defaultValue: IT): IT;
 
@@ -57,18 +53,17 @@ export type Pipe<IT> = Res<IT> & {
 export function pipe<T>(result: Res<T>): Pipe<T> {
   return {
     ...result,
-    map: (fn) => map(result, fn),
-    mapErr: (fn) => mapErr(result, fn),
-    and: (fn) => and(result, fn),
-    andThen: (fn) => andThen(result, fn),
-    or: (fn) => or(result, fn),
-    orElse: (fn) => orElse(result, fn),
-    unwrap: () => unwrap(result),
+    map: (fn) => pipe(map(result, fn)),
+    mapOr: (defaultValue, fn) => pipe(mapOr(result, defaultValue, fn)),
+    mapOrElse: (defaultFn, fn) => pipe(mapOrElse(result, defaultFn, fn)),
+    mapErr: (fn) => pipe(mapErr(result, fn)),
+    and: (fn) => pipe(and(result, fn)),
+    andThen: (fn) => pipe(andThen(result, fn)),
+    or: (fn) => pipe(or(result, fn)),
+    orElse: (fn) => pipe(orElse(result, fn)),
     unwrapOr: (defaultValue) => unwrapOr(result, defaultValue),
     unwrapOrElse: (fn) => unwrapOrElse(result, fn),
     match: (ok, err) => match(result, ok, err),
-    mapOr: (defaultValue, fn) => mapOr(result, defaultValue, fn),
-    mapOrElse: (defaultFn, fn) => mapOrElse(result, defaultFn, fn),
     res: () => result,
   };
 }
