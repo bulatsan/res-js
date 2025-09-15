@@ -11,7 +11,7 @@ describe('pipe', () => {
   describe('map', () => {
     it('[err] map fn -> [err]; fn ignored', () => {
       const fn = vi.fn((_: number) => 2);
-      const r = pipe(ERR).map(fn).res();
+      const r = pipe.from(ERR).map(fn).res();
 
       expect(r).toEqual(ERR);
       expect(fn).not.toHaveBeenCalled();
@@ -19,7 +19,7 @@ describe('pipe', () => {
 
     it('[ok] map fn[another ok] -> [another ok]', () => {
       const fn = vi.fn((_: number) => 2);
-      const r = pipe(OK).map(fn).res();
+      const r = pipe.from(OK).map(fn).res();
 
       expect(r).toEqual(ok(2));
       expect(fn).toHaveBeenCalledTimes(1);
@@ -28,7 +28,7 @@ describe('pipe', () => {
 
     it('[ok] map fn[another type ok] -> [another type ok]', () => {
       const fn = vi.fn((_: number) => 'str');
-      const r = pipe(OK).map(fn).res();
+      const r = pipe.from(OK).map(fn).res();
 
       expect(r).toEqual(ok('str'));
       expect(fn).toHaveBeenCalledTimes(1);
@@ -39,7 +39,7 @@ describe('pipe', () => {
   describe('mapErr', () => {
     it('[ok] mapErr fn -> [ok]; fn ignored', () => {
       const wrap = vi.fn((e: Error) => e);
-      const r = pipe(OK).mapErr(wrap).res();
+      const r = pipe.from(OK).mapErr(wrap).res();
 
       expect(r).toEqual(OK);
       expect(wrap).not.toHaveBeenCalled();
@@ -48,7 +48,7 @@ describe('pipe', () => {
     it('[err] mapErr fn[wrapped] -> [wrapped err]', () => {
       const WRAPPED = new Error('wrapped');
       const wrap = vi.fn(() => WRAPPED);
-      const r = pipe(ERR).mapErr(wrap).res();
+      const r = pipe.from(ERR).mapErr(wrap).res();
 
       expect(r).toEqual(err(WRAPPED));
       expect(wrap).toHaveBeenCalledTimes(1);
@@ -59,21 +59,21 @@ describe('pipe', () => {
   describe('and', () => {
     it('[ok] and [okX] -> [okX]', () => {
       const X = ok(2);
-      const r = pipe(OK).and(X).res();
+      const r = pipe.from(OK).and(X).res();
 
       expect(r).toEqual(X);
     });
 
     it('[ok] and [errX] -> [errX]', () => {
       const X = err(new Error('x'));
-      const r = pipe(OK).and(X).res();
+      const r = pipe.from(OK).and(X).res();
 
       expect(r).toEqual(X);
     });
 
     it('[err] and [any] -> [err]', () => {
       const X = ok(2);
-      const r = pipe(ERR).and(X).res();
+      const r = pipe.from(ERR).and(X).res();
 
       expect(r).toEqual(ERR);
     });
@@ -82,7 +82,7 @@ describe('pipe', () => {
   describe('andThen', () => {
     it('[ok] andThen fn(ok)[okX] -> [okX]', () => {
       const fn = vi.fn((_ok: number) => ok(_ok + 1));
-      const r = pipe(OK).andThen(fn).res();
+      const r = pipe.from(OK).andThen(fn).res();
 
       expect(r).toEqual(ok(2));
       expect(fn).toHaveBeenCalledTimes(1);
@@ -91,7 +91,7 @@ describe('pipe', () => {
 
     it('[err] andThen fn -> [err]; fn ignored', () => {
       const fn = vi.fn((_ok: number) => ok(_ok + 1));
-      const r = pipe(ERR).andThen(fn).res();
+      const r = pipe.from(ERR).andThen(fn).res();
 
       expect(r).toEqual(ERR);
       expect(fn).not.toHaveBeenCalled();
@@ -101,14 +101,14 @@ describe('pipe', () => {
   describe('or', () => {
     it('[ok] or [any] -> [ok]', () => {
       const X = err(new Error('x'));
-      const r = pipe(OK).or(X).res();
+      const r = pipe.from(OK).or(X).res();
 
       expect(r).toEqual(OK);
     });
 
     it('[err] or [okX] -> [okX]', () => {
       const X = ok(2);
-      const r = pipe(ERR).or(X).res();
+      const r = pipe.from(ERR).or(X).res();
 
       expect(r).toEqual(X);
     });
@@ -117,7 +117,7 @@ describe('pipe', () => {
   describe('orElse', () => {
     it('[ok] orElse fn -> [ok]; fn ignored', () => {
       const fn = vi.fn((_e: Error) => ok(2));
-      const r = pipe(OK).orElse(fn).res();
+      const r = pipe.from(OK).orElse(fn).res();
 
       expect(r).toEqual(OK);
       expect(fn).not.toHaveBeenCalled();
@@ -125,7 +125,7 @@ describe('pipe', () => {
 
     it('[err] orElse fn(err)[okX] -> [okX]', () => {
       const fn = vi.fn((_e: Error) => ok(2));
-      const r = pipe(ERR).orElse(fn).res();
+      const r = pipe.from(ERR).orElse(fn).res();
 
       expect(r).toEqual(ok(2));
       expect(fn).toHaveBeenCalledTimes(1);
@@ -135,18 +135,18 @@ describe('pipe', () => {
 
   describe('unwrapOr', () => {
     it('[ok] unwrapOr default -> ok', () => {
-      expect(pipe(OK).unwrapOr(10)).toBe(1);
+      expect(pipe.from(OK).unwrapOr(10)).toBe(1);
     });
 
     it('[err] unwrapOr default -> default', () => {
-      expect(pipe(ERR).unwrapOr(10)).toBe(10);
+      expect(pipe.from(ERR).unwrapOr(10)).toBe(10);
     });
   });
 
   describe('unwrapOrElse', () => {
     it('[ok] unwrapOrElse fn -> ok', () => {
       const fn = vi.fn((_e: Error) => 10);
-      const r = pipe(OK).unwrapOrElse(fn);
+      const r = pipe.from(OK).unwrapOrElse(fn);
 
       expect(r).toBe(1);
       expect(fn).not.toHaveBeenCalled();
@@ -154,7 +154,7 @@ describe('pipe', () => {
 
     it('[err] unwrapOrElse fn(err) -> fn(err)', () => {
       const fn = vi.fn((_e: Error) => 10);
-      const r = pipe(ERR).unwrapOrElse(fn);
+      const r = pipe.from(ERR).unwrapOrElse(fn);
 
       expect(r).toBe(10);
       expect(fn).toHaveBeenCalledTimes(1);
@@ -166,7 +166,7 @@ describe('pipe', () => {
     it('[ok] match(okFn, errFn) -> okFn(ok)', () => {
       const okFn = vi.fn((_: number) => `V:${_}`);
       const errFn = vi.fn((e: Error) => `E:${e.message}`);
-      const r = pipe(OK).match(okFn, errFn);
+      const r = pipe.from(OK).match(okFn, errFn);
 
       expect(r).toBe('V:1');
       expect(okFn).toHaveBeenCalledTimes(1);
@@ -177,7 +177,7 @@ describe('pipe', () => {
     it('[err] match(okFn, errFn) -> errFn(err)', () => {
       const okFn = vi.fn((_: number) => `V:${_}`);
       const errFn = vi.fn((e: Error) => `E:${e.message}`);
-      const r = pipe(ERR).match(okFn, errFn);
+      const r = pipe.from(ERR).match(okFn, errFn);
 
       expect(r).toBe('E:error');
       expect(errFn).toHaveBeenCalledTimes(1);
@@ -189,7 +189,7 @@ describe('pipe', () => {
   describe('mapOr', () => {
     it('[ok] mapOr default, fn -> fn(ok)', () => {
       const fn = vi.fn((_: number) => 2);
-      const r = pipe(OK).mapOr(10, fn).res();
+      const r = pipe.from(OK).mapOr(10, fn).res();
 
       expect(r).toEqual(ok(2));
       expect(fn).toHaveBeenCalledTimes(1);
@@ -198,7 +198,7 @@ describe('pipe', () => {
 
     it('[err] mapOr default, fn -> default', () => {
       const fn = vi.fn((_: number) => 2);
-      const r = pipe(ERR).mapOr(10, fn).res();
+      const r = pipe.from(ERR).mapOr(10, fn).res();
 
       expect(r).toEqual(ok(10));
       expect(fn).not.toHaveBeenCalled();
@@ -212,7 +212,7 @@ describe('pipe', () => {
     it('[ok] mapOrElse defaultFn, fn -> fn(ok)', () => {
       const d = vi.fn(DEFAULT);
       const f = vi.fn(MAP);
-      const r = pipe(OK).mapOrElse(d, f).res();
+      const r = pipe.from(OK).mapOrElse(d, f).res();
 
       expect(r).toEqual(ok('V:1'));
       expect(f).toHaveBeenCalledTimes(1);
@@ -223,7 +223,7 @@ describe('pipe', () => {
     it('[err] mapOrElse defaultFn, fn -> defaultFn(err)', () => {
       const d = vi.fn(DEFAULT);
       const f = vi.fn(MAP);
-      const r = pipe(ERR).mapOrElse(d, f).res();
+      const r = pipe.from(ERR).mapOrElse(d, f).res();
 
       expect(r).toEqual(ok('E:error'));
       expect(d).toHaveBeenCalledTimes(1);
@@ -234,21 +234,21 @@ describe('pipe', () => {
 
   describe('res', () => {
     it('res() returns the original Res', () => {
-      expect(pipe(OK).res()).toEqual(OK);
-      expect(pipe(ERR).res()).toEqual(ERR);
+      expect(pipe.from(OK).res()).toEqual(OK);
+      expect(pipe.from(ERR).res()).toEqual(ERR);
     });
   });
 
   describe('chaining', () => {
     it('chaining works correctly', () => {
-      const v = pipe(ok(1))
-        .map((x) => x + 1)
+      const v = pipe
+        .map(ok(1), (x) => x + 1)
         .and(ok(10))
         .unwrapOr(0);
       expect(v).toBe(10);
 
-      const v2 = pipe(ERR)
-        .orElse((_e) => ok(5))
+      const v2 = pipe
+        .orElse(ERR, (_e) => ok(5))
         .map((x) => x * 2)
         .unwrapOr(0);
       expect(v2).toBe(10);

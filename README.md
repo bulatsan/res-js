@@ -26,7 +26,7 @@ bun add @bulatlib/res
   - `wrapAsync(fn)` — run an async function with try/catch and return `Promise<Res<T>>`.
 
 - **Pipe**
-  - `pipe(res)` — wraps `Res<T>` and returns `Pipe<T>` with chainable methods.
+  - `pipe.from(res)` — wraps `Res<T>` and returns `Pipe<T>` with chainable methods.
   - `Pipe<T> methods:`
     - `map(fn)` — `Ok(T) -> Ok(fn(T))`, `Err` unchanged.
     - `mapErr(fn)` — transform `Error` to `Err(fn(err))`.

@@ -50,20 +50,48 @@ export type Pipe<IT> = Res<IT> & {
   res(): Res<IT>;
 };
 
-export function pipe<T>(result: Res<T>): Pipe<T> {
+export const pipe = {
+  from: <IT>(self: Res<IT>) => pipefn(self),
+
+  map: <IT, OT>(self: Res<IT>, fn: (ok: IT) => OT) => pipefn(map(self, fn)),
+
+  mapOr: <IT, OT>(self: Res<IT>, defaultValue: OT, fn: (ok: IT) => OT) =>
+    pipefn(mapOr(self, defaultValue, fn)),
+
+  mapOrElse: <IT, OT>(
+    self: Res<IT>,
+    defaultFn: (err: Error) => OT,
+    fn: (ok: IT) => OT,
+  ) => pipefn(mapOrElse(self, defaultFn, fn)),
+
+  mapErr: <IT>(self: Res<IT>, fn: (err: Error) => Error) =>
+    pipefn(mapErr(self, fn)),
+
+  and: <IT, OT>(self: Res<IT>, res: Res<OT>) => pipefn(and(self, res)),
+
+  andThen: <IT, OT>(self: Res<IT>, fn: (ok: IT) => Res<OT>) =>
+    pipefn(andThen(self, fn)),
+
+  or: <IT>(self: Res<IT>, res: Res<IT>) => pipefn(or(self, res)),
+
+  orElse: <IT>(self: Res<IT>, fn: (err: Error) => Res<IT>) =>
+    pipefn(orElse(self, fn)),
+};
+
+function pipefn<T>(self: Res<T>): Pipe<T> {
   return {
-    ...result,
-    map: (fn) => pipe(map(result, fn)),
-    mapOr: (defaultValue, fn) => pipe(mapOr(result, defaultValue, fn)),
-    mapOrElse: (defaultFn, fn) => pipe(mapOrElse(result, defaultFn, fn)),
-    mapErr: (fn) => pipe(mapErr(result, fn)),
-    and: (fn) => pipe(and(result, fn)),
-    andThen: (fn) => pipe(andThen(result, fn)),
-    or: (fn) => pipe(or(result, fn)),
-    orElse: (fn) => pipe(orElse(result, fn)),
-    unwrapOr: (defaultValue) => unwrapOr(result, defaultValue),
-    unwrapOrElse: (fn) => unwrapOrElse(result, fn),
-    match: (ok, err) => match(result, ok, err),
-    res: () => result,
+    ...self,
+    map: (fn) => pipefn(map(self, fn)),
+    mapOr: (defaultValue, fn) => pipefn(mapOr(self, defaultValue, fn)),
+    mapOrElse: (defaultFn, fn) => pipefn(mapOrElse(self, defaultFn, fn)),
+    mapErr: (fn) => pipefn(mapErr(self, fn)),
+    and: (fn) => pipefn(and(self, fn)),
+    andThen: (fn) => pipefn(andThen(self, fn)),
+    or: (fn) => pipefn(or(self, fn)),
+    orElse: (fn) => pipefn(orElse(self, fn)),
+    unwrapOr: (defaultValue) => unwrapOr(self, defaultValue),
+    unwrapOrElse: (fn) => unwrapOrElse(self, fn),
+    match: (ok, err) => match(self, ok, err),
+    res: () => self,
   };
 }
