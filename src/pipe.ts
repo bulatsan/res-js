@@ -10,6 +10,7 @@ import { orElse } from './or-else';
 import { type Res } from './res';
 import { unwrapOr } from './unwrap-or';
 import { unwrapOrElse } from './unwrap-or-else';
+import { wrap, wrapAsync } from './wrap';
 
 export type PipeAsync<IT> = Promise<Pipe<IT>>;
 
@@ -52,6 +53,10 @@ export type Pipe<IT> = Res<IT> & {
 
 export const pipe = {
   from: <IT>(self: Res<IT>) => pipefn(self),
+  wrap: <IT>(fn: () => IT) => pipefn(wrap(fn)),
+  wrapAsync: async <IT>(fn: () => Promise<IT>) => {
+    return pipefn(await wrapAsync(fn));
+  },
 
   map: <IT, OT>(self: Res<IT>, fn: (ok: IT) => OT) => pipefn(map(self, fn)),
 

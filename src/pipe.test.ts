@@ -242,16 +242,92 @@ describe('pipe', () => {
   describe('chaining', () => {
     it('chaining works correctly', () => {
       const v = pipe
-        .map(ok(1), (x) => x + 1)
+        .from(ok(1))
+        .map((x) => x + 1)
         .and(ok(10))
         .unwrapOr(0);
       expect(v).toBe(10);
 
       const v2 = pipe
-        .orElse(ERR, (_e) => ok(5))
+        .from(ERR)
+        .orElse((_e) => ok(5))
         .map((x) => x * 2)
         .unwrapOr(0);
       expect(v2).toBe(10);
+    });
+  });
+});
+
+describe('pipe constructors', () => {
+  describe('from', () => {
+    it('[ok] from(ok) -> Pipe ok', () => {
+      expect(pipe.from(ok(1)).res()).toEqual(ok(1));
+    });
+
+    it('[err] from(err) -> Pipe err', () => {
+      const E = new Error('e');
+      const ERR = err<number>(E);
+      expect(pipe.from(ERR).res()).toEqual(ERR);
+    });
+  });
+
+  describe('wrap', () => {
+    it('wrap(fn ok).res() -> ok(value)', () => {
+      const r = pipe.wrap(() => 123).res();
+
+      expect(r).toEqual(ok(123));
+    });
+
+    it('wrap(fn throws Error).res() -> err(Error)', () => {
+      const E = new Error('boom');
+      const r = pipe
+        .wrap(() => {
+          throw E;
+        })
+        .res();
+
+      expect(r).toEqual(err(E));
+    });
+
+    it('wrap(fn throws non-Error).res() -> err(Error)', () => {
+      const r = pipe
+        .wrap(() => {
+          // eslint-disable-next-line no-throw-literal
+          throw 'boom';
+        })
+        .res();
+
+      expect(r).toEqual(err(new Error('boom')));
+    });
+  });
+
+  describe('wrapAsync', () => {
+    it('wrapAsync(fn resolves).res() -> ok(value)', async () => {
+      const r = (await pipe.wrapAsync(async () => 7)).res();
+
+      expect(r).toEqual(ok(7));
+    });
+
+    it('wrapAsync(fn rejects Error).res() -> err(Error)', async () => {
+      const E = new Error('boom');
+      const r = (
+        await pipe.wrapAsync(async () => {
+          throw E;
+        })
+      ).res();
+
+      expect(r).toEqual(err(E));
+    });
+
+    it('wrapAsync(fn rejects non-Error).res() -> err(Error)', async () => {
+      const r = (
+        await pipe.wrapAsync(async () => {
+          // eslint-disable-next-line no-throw-literal
+          throw 'boom';
+        })
+      ).res();
+
+      expect(r).toEqual(err(new Error('boom')));
     });
   });
 });
