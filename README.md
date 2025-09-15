@@ -1,6 +1,6 @@
-## @bulatlib/res — tiny result helpers for TypeScript
+## @bulatlib/res — Rust‑style Result for TypeScript
 
-Simple and strict utilities for the Result pattern: `ok`, `err`, `cover`, `coverAsync`, and mapping helpers.
+Small, strict utilities for Rust‑style (`Ok`/`Err`) results. Provides safe constructors, execution wrappers, and transformation chains via `pipe`.
 
 ### Install
 
@@ -12,28 +12,39 @@ pnpm add @bulatlib/res
 bun add @bulatlib/res
 ```
 
-### Usage
+### Quick API
 
-```ts
-import { res } from '@bulatlib/res';
+- **Core types**
+  - `Res<T>`: union `{ ok: T } | { err: Error }`.
 
-const { ok, err } = res.cover(() => JSON.parse('{"a":1}'));
-if (err) {
-  console.log(err); // error branch
-} else {
-  console.log(ok); // ok branch
-}
+- **Constructors**
+  - `ok(value)` — create a successful result.
+  - `err(error)` — create an error result.
 
-// Manual result construction
-const success = res.ok({ id: 1, name: 'John' });
-const failure = res.err(new Error('User not found'));
+- **Safe execution**
+  - `wrap(fn)` — run a sync function with try/catch and return `Pipe<T>`.
+  - `wrapAsync(fn)` — run an async function with try/catch and return `Promise<Pipe<T>>`.
 
-// Async cover
-const result = await res.coverAsync(async () => {
-  const response = await fetch('/api/users');
-  return response.json();
-});
-```
+- **Pipe**
+  - `pipe(res)` — wraps `Res<T>` and returns `Pipe<T>` with chainable methods.
+  - `Pipe<T> methods:`
+    - `map(fn)` — `Ok(T) -> Ok(fn(T))`, `Err` unchanged.
+    - `mapErr(fn)` — transform `Error` to `Err(fn(err))`.
+    - `mapOr(default, fn)` — on `Ok` return `Ok(fn(T))`, on `Err` return `Ok(default)`.
+    - `mapOrElse(defaultFn, fn)` — on `Ok` return `Ok(fn(T))`, on `Err` return `Ok(defaultFn(err))`.
+    - `and(res)` — if `Ok`, return the second `res`, otherwise keep original `Err`.
+    - `andThen(fn)` — if `Ok`, evaluate `fn(T): Res<U>`, otherwise `Err`.
+    - `or(res)` — if `Ok`, return it; otherwise return the second `res`.
+    - `orElse(fn)` — if `Err`, evaluate `fn(err): Res<T>`; otherwise keep original `Ok`.
+    - `unwrap()` — return `T` or throw `Error`.
+    - `unwrapOr(default)` — return `T` or `default`.
+    - `unwrapOrElse(fn)` — return `T` or `fn(err)`.
+    - `match(okFn, errFn)` — pattern match and return a value of one of callbacks.
+    - `res()` — return raw `Res<T>`.
+
+### Examples
+
+Examples will be added soon. Meanwhile, please check the test files in `src` (e.g., `src/*.test.ts`) for usage examples.
 
 ### License
 

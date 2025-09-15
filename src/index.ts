@@ -1,2 +1,2 @@
-export * from './index.export';
-export * as res from './index.export';
+export * from './index-exports';
+export * as res from './index-exports';
