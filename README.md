@@ -36,11 +36,13 @@ bun add @bulatlib/res
     - `andThen(fn)` — if `Ok`, evaluate `fn(T): Res<U>`, otherwise `Err`.
     - `or(res)` — if `Ok`, return it; otherwise return the second `res`.
     - `orElse(fn)` — if `Err`, evaluate `fn(err): Res<T>`; otherwise keep original `Ok`.
-    - `unwrap()` — return `T` or throw `Error`.
     - `unwrapOr(default)` — return `T` or `default`.
     - `unwrapOrElse(fn)` — return `T` or `fn(err)`.
     - `match(okFn, errFn)` — pattern match and return a value of one of callbacks.
     - `res()` — return raw `Res<T>`.
+
+- **Utilities**
+  - `combine(results)` — fold `Res<T>[]` into `Res<T[]>`. Returns the first `Err` if any, otherwise `Ok` with collected values in order.
 
 ### Examples
 
