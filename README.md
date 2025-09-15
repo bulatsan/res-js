@@ -15,7 +15,7 @@ bun add @bulatlib/res
 ### Quick API
 
 - **Core types**
-  - `Res<T>`: union `{ ok: T } | { err: Error }`.
+  - `Res<T>`: union `{ ok: T; err?: never } | { ok?: never; err: Error }`.
 
 - **Constructors**
   - `ok(value)` — create a successful result.

@@ -28,10 +28,10 @@ export type Pipe<IT> = Res<IT> & {
   mapErr(fn: (err: Error) => Error): Pipe<IT>;
 
   // acts like a logical AND (ok = true, err = false)
-  and(res: Res<IT>): Pipe<IT>;
+  and<OT>(res: Res<OT>): Pipe<OT>;
 
   // acts like a and() but evaluates the function only if the result is ok
-  andThen(fn: (ok: IT) => Res<IT>): Pipe<IT>;
+  andThen<OT>(fn: (ok: IT) => Res<OT>): Pipe<OT>;
 
   // acts like a logical OR (ok = true, err = false)
   or(res: Res<IT>): Pipe<IT>;
