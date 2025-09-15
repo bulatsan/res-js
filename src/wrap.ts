@@ -1,26 +1,25 @@
-import { type Pipe, PipeAsync, pipe } from './pipe';
-import { err, ok } from './res';
+import { type Res, type ResAsync, err, ok } from './res';
 
-export function wrap<T>(fn: () => T): Pipe<T> {
+export function wrap<T>(fn: () => T): Res<T> {
   try {
-    return pipe(ok(fn()));
+    return ok(fn());
   } catch (error) {
     if (error instanceof Error) {
-      return pipe(err(error));
+      return err(error);
     }
 
-    return pipe(err(new Error(String(error))));
+    return err(new Error(String(error)));
   }
 }
 
-export async function wrapAsync<T>(fn: () => Promise<T>): PipeAsync<T> {
+export async function wrapAsync<T>(fn: () => Promise<T>): ResAsync<T> {
   try {
-    return pipe(ok(await fn()));
+    return ok(await fn());
   } catch (error) {
     if (error instanceof Error) {
-      return pipe(err(error));
+      return err(error);
     }
 
-    return pipe(err(new Error(String(error))));
+    return err(new Error(String(error)));
   }
 }

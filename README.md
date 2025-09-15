@@ -22,8 +22,8 @@ bun add @bulatlib/res
   - `err(error)` — create an error result.
 
 - **Safe execution**
-  - `wrap(fn)` — run a sync function with try/catch and return `Pipe<T>`.
-  - `wrapAsync(fn)` — run an async function with try/catch and return `Promise<Pipe<T>>`.
+  - `wrap(fn)` — run a sync function with try/catch and return `Res<T>`.
+  - `wrapAsync(fn)` — run an async function with try/catch and return `Promise<Res<T>>`.
 
 - **Pipe**
   - `pipe(res)` — wraps `Res<T>` and returns `Pipe<T>` with chainable methods.
