@@ -10,6 +10,7 @@ import { orElse } from './or-else';
 import { type Res } from './res';
 import { unwrapOr } from './unwrap-or';
 import { unwrapOrElse } from './unwrap-or-else';
+import { unwrapOrThrow } from './unwrap-or-throw';
 import { wrap, wrapAsync } from './wrap';
 
 export type PipeAsync<IT> = Promise<Pipe<IT>>;
@@ -44,6 +45,9 @@ export type Pipe<IT> = Res<IT> & {
 
   // returns the value of the result if it is ok, otherwise evaluates the function
   unwrapOrElse(fn: (err: Error) => IT): IT;
+
+  // returns ok or throws error
+  unwrapOrThrow(): IT;
 
   // matches the result and returns the value of the function that matches the result
   match<OT>(ok: (ok: IT) => OT, err: (err: Error) => OT): OT;
@@ -96,6 +100,7 @@ function pipefn<T>(self: Res<T>): Pipe<T> {
     orElse: (fn) => pipefn(orElse(self, fn)),
     unwrapOr: (defaultValue) => unwrapOr(self, defaultValue),
     unwrapOrElse: (fn) => unwrapOrElse(self, fn),
+    unwrapOrThrow: () => unwrapOrThrow(self),
     match: (ok, err) => match(self, ok, err),
     res: () => self,
   };

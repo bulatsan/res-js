@@ -162,6 +162,18 @@ describe('pipe', () => {
     });
   });
 
+  describe('unwrapOrThrow', () => {
+    it('[ok] unwrapOrThrow -> ok', () => {
+      const r = pipe.from(OK).unwrapOrThrow();
+
+      expect(r).toBe(1);
+    });
+
+    it('[err] unwrapOrThrow -> throws(err)', () => {
+      expect(() => pipe.from(ERR).unwrapOrThrow()).toThrow(ERROR);
+    });
+  });
+
   describe('match', () => {
     it('[ok] match(okFn, errFn) -> okFn(ok)', () => {
       const okFn = vi.fn((_: number) => `V:${_}`);
