@@ -6,7 +6,7 @@ import { err, ok } from './res';
 describe('pipe', () => {
   const ERROR = new Error('error');
   const OK = ok(1);
-  const ERR = err<number>(ERROR);
+  const ERR = err(ERROR);
 
   describe('map', () => {
     it('[err] map fn -> [err]; fn ignored', () => {
@@ -108,7 +108,7 @@ describe('pipe', () => {
 
     it('[err] or [okX] -> [okX]', () => {
       const X = ok(2);
-      const r = pipe.from(ERR).or(X).res();
+      const r = pipe.from<number>(ERR).or(X).res();
 
       expect(r).toEqual(X);
     });
@@ -125,7 +125,7 @@ describe('pipe', () => {
 
     it('[err] orElse fn(err)[okX] -> [okX]', () => {
       const fn = vi.fn((_e: Error) => ok(2));
-      const r = pipe.from(ERR).orElse(fn).res();
+      const r = pipe.from<number>(ERR).orElse(fn).res();
 
       expect(r).toEqual(ok(2));
       expect(fn).toHaveBeenCalledTimes(1);
@@ -139,7 +139,7 @@ describe('pipe', () => {
     });
 
     it('[err] unwrapOr default -> default', () => {
-      expect(pipe.from(ERR).unwrapOr(10)).toBe(10);
+      expect(pipe.from<number>(ERR).unwrapOr(10)).toBe(10);
     });
   });
 
@@ -154,7 +154,7 @@ describe('pipe', () => {
 
     it('[err] unwrapOrElse fn(err) -> fn(err)', () => {
       const fn = vi.fn((_e: Error) => 10);
-      const r = pipe.from(ERR).unwrapOrElse(fn);
+      const r = pipe.from<number>(ERR).unwrapOrElse(fn);
 
       expect(r).toBe(10);
       expect(fn).toHaveBeenCalledTimes(1);
@@ -162,15 +162,15 @@ describe('pipe', () => {
     });
   });
 
-  describe('unwrapOrThrow', () => {
-    it('[ok] unwrapOrThrow -> ok', () => {
-      const r = pipe.from(OK).unwrapOrThrow();
+  describe('unwrap', () => {
+    it('[ok] unwrap -> ok', () => {
+      const r = pipe.from(OK).unwrap();
 
       expect(r).toBe(1);
     });
 
-    it('[err] unwrapOrThrow -> throws(err)', () => {
-      expect(() => pipe.from(ERR).unwrapOrThrow()).toThrow(ERROR);
+    it('[err] unwrap -> throws(err)', () => {
+      expect(() => pipe.from(ERR).unwrap()).toThrow(ERROR);
     });
   });
 
@@ -261,7 +261,7 @@ describe('pipe', () => {
       expect(v).toBe(10);
 
       const v2 = pipe
-        .from(ERR)
+        .from<number>(ERR)
         .orElse((_e) => ok(5))
         .map((x) => x * 2)
         .unwrapOr(0);
@@ -278,7 +278,7 @@ describe('pipe constructors', () => {
 
     it('[err] from(err) -> Pipe err', () => {
       const E = new Error('e');
-      const ERR = err<number>(E);
+      const ERR = err(E);
       expect(pipe.from(ERR).res()).toEqual(ERR);
     });
   });

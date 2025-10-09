@@ -18,7 +18,7 @@ describe('combine', () => {
 
   it('[err, ok, ok] -> [err]', () => {
     const ERROR = new Error('e1');
-    const ERR = err<number>(ERROR);
+    const ERR = err(ERROR);
     const r = combine(ERR, ok(2), ok(3));
 
     expect(r).toEqual(ERR);
@@ -26,7 +26,7 @@ describe('combine', () => {
 
   it('[ok, err, ok] -> [err]', () => {
     const ERROR = new Error('e2');
-    const ERR = err<number>(ERROR);
+    const ERR = err(ERROR);
     const r = combine(ok(1), ERR, ok(3));
 
     expect(r).toEqual(ERR);
@@ -34,7 +34,7 @@ describe('combine', () => {
 
   it('[ok, ok, err] -> [err]', () => {
     const ERROR = new Error('e3');
-    const ERR = err<number>(ERROR);
+    const ERR = err(ERROR);
     const r = combine(ok(1), ok(2), ERR);
 
     expect(r).toEqual(ERR);

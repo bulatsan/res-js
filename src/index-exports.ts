@@ -10,7 +10,7 @@ export * from './map-or';
 export * from './map-or-else';
 export * from './unwrap-or';
 export * from './unwrap-or-else';
-export * from './unwrap-or-throw';
+export * from './unwrap';
 export * from './match';
 export * from './pipe';
 export * from './combine';
