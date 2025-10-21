@@ -4,11 +4,10 @@ import { type Res, ok } from '@/res';
 export function mapOrElse<IT, OT>(
   self: Res<IT>,
   defaultFn: (err: Error) => OT,
-  fn: (ok: IT) => OT,
+  map: (ok: IT) => OT,
 ): Res<OT> {
-  return match(
-    self,
-    (_ok) => ok(fn(_ok)),
-    (_err) => ok(defaultFn(_err)),
-  );
+  return match(self, {
+    ok: (_ok) => ok(map(_ok)),
+    err: (_err) => ok(defaultFn(_err)),
+  });
 }

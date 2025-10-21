@@ -1,9 +1,13 @@
 import { type Res } from '@/res';
 
+interface MatchAsync<IT, OT> {
+  ok: (ok: IT) => Promise<OT> | OT;
+  err: (err: Error) => Promise<OT> | OT;
+}
+
 export async function matchAsync<IT, OT>(
   res: Res<IT>,
-  onOk: (ok: IT) => Promise<OT>,
-  onErr: (err: Error) => Promise<OT>,
+  match: MatchAsync<IT, OT>,
 ): Promise<OT> {
-  return res.err ? await onErr(res.err) : await onOk(res.ok);
+  return res.err ? await match.err(res.err) : await match.ok(res.ok);
 }

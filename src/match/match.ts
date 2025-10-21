@@ -1,9 +1,10 @@
 import { type Res } from '@/res';
 
-export function match<IT, OT>(
-  res: Res<IT>,
-  onOk: (ok: IT) => OT,
-  onErr: (err: Error) => OT,
-): OT {
-  return res.err ? onErr(res.err) : onOk(res.ok);
+interface Match<IT, OT> {
+  ok: (ok: IT) => OT;
+  err: (err: Error) => OT;
+}
+
+export function match<IT, OT>(res: Res<IT>, match: Match<IT, OT>): OT {
+  return res.err ? match.err(res.err) : match.ok(res.ok);
 }

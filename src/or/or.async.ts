@@ -5,9 +5,8 @@ export async function orAsync<T>(
   self: Res<T>,
   other: Promise<Res<T>>,
 ): Promise<Res<T>> {
-  return await matchAsync(
-    self,
-    async (_ok) => self,
-    async (_err) => await other,
-  );
+  return await matchAsync(self, {
+    ok: () => self,
+    err: async () => await other,
+  });
 }

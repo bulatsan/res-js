@@ -12,7 +12,7 @@ describe('matchAsync', () => {
     const onOk = vi.fn(async (_: number) => 'ok');
     const onErr = vi.fn(async (_: Error) => 'err');
 
-    const r = await matchAsync(OK, onOk, onErr);
+    const r = await matchAsync(OK, { ok: onOk, err: onErr });
 
     expect(r).toEqual('ok');
     expect(onOk).toHaveBeenCalledTimes(1);
@@ -24,7 +24,7 @@ describe('matchAsync', () => {
     const onOk = vi.fn(async (_: number) => 'ok');
     const onErr = vi.fn(async (_: Error) => 'err');
 
-    const r = await matchAsync(ERR, onOk, onErr);
+    const r = await matchAsync(ERR, { ok: onOk, err: onErr });
 
     expect(r).toEqual('err');
     expect(onErr).toHaveBeenCalledTimes(1);

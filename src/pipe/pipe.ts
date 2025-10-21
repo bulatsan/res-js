@@ -43,7 +43,7 @@ export type Pipe<IT> = Res<IT> & {
   unwrap(): IT;
 
   // matches the result and returns the value of the function that matches the result
-  match<OT>(ok: (ok: IT) => OT, err: (err: Error) => OT): OT;
+  match<OT>(_: { ok: (ok: IT) => OT; err: (err: Error) => OT }): OT;
 
   res(): Res<IT>;
 };
@@ -91,7 +91,7 @@ function pipefn<T>(self: Res<T>): Pipe<T> {
     unwrapOr: (defaultValue) => unwrapOr(self, defaultValue),
     unwrapOrElse: (fn) => unwrapOrElse(self, fn),
     unwrap: () => unwrap(self),
-    match: (ok, err) => match(self, ok, err),
+    match: (matchFn) => match(self, matchFn),
     res: () => self,
   };
 }

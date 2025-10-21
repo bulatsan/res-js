@@ -1,7 +1,7 @@
 {
   "name": "@bulatlib/res",
   "author": "bulatsan",
-  "version": "0.0.17",
+  "version": "0.0.18",
   "description": "Rust style Result for TypeScript",
   "license": "MIT",
   "private": false,
@@ -41,11 +41,11 @@
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^5.2.2",
-    "@tsconfig/strictest": "^2.0.5",
-    "@types/node": "^24.3.0",
+    "@tsconfig/strictest": "^2.0.6",
+    "@types/node": "^24.9.1",
     "prettier": "^3.6.2",
-    "typescript": "^5.9.2",
-    "vite": "^7.1.4",
+    "typescript": "^5.9.3",
+    "vite": "^7.1.11",
     "vite-plugin-dts": "^4.5.4",
     "vitest": "^3.2.4"
   }

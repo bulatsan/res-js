@@ -178,7 +178,7 @@ describe('pipe', () => {
     it('[ok] match(okFn, errFn) -> okFn(ok)', () => {
       const okFn = vi.fn((_: number) => `V:${_}`);
       const errFn = vi.fn((e: Error) => `E:${e.message}`);
-      const r = pipe.from(OK).match(okFn, errFn);
+      const r = pipe.from(OK).match({ ok: okFn, err: errFn });
 
       expect(r).toBe('V:1');
       expect(okFn).toHaveBeenCalledTimes(1);
@@ -189,7 +189,7 @@ describe('pipe', () => {
     it('[err] match(okFn, errFn) -> errFn(err)', () => {
       const okFn = vi.fn((_: number) => `V:${_}`);
       const errFn = vi.fn((e: Error) => `E:${e.message}`);
-      const r = pipe.from(ERR).match(okFn, errFn);
+      const r = pipe.from(ERR).match({ ok: okFn, err: errFn });
 
       expect(r).toBe('E:error');
       expect(errFn).toHaveBeenCalledTimes(1);

@@ -3,11 +3,10 @@ import { type Res, err } from '@/res';
 
 export function mapErr<IT>(
   self: Res<IT>,
-  fn: (error: Error) => Error,
+  map: (error: Error) => Error,
 ): Res<IT> {
-  return match(
-    self,
-    (_ok) => self,
-    (_err) => err(fn(_err)),
-  );
+  return match(self, {
+    ok: () => self,
+    err: (_err) => err(map(_err)),
+  });
 }

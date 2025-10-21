@@ -11,7 +11,7 @@ describe('match', () => {
   it('[ok] match -> onOk(ok)', () => {
     const onOk = vi.fn((_: number) => 'ok');
     const onErr = vi.fn((_: Error) => 'err');
-    const r = match(OK, onOk, onErr);
+    const r = match(OK, { ok: onOk, err: onErr });
 
     expect(r).toEqual('ok');
     expect(onOk).toHaveBeenCalledTimes(1);
@@ -22,7 +22,7 @@ describe('match', () => {
   it('[err] match -> onErr(err)', () => {
     const onOk = vi.fn((_: number) => 'ok');
     const onErr = vi.fn((_: Error) => 'err');
-    const r = match(ERR, onOk, onErr);
+    const r = match(ERR, { ok: onOk, err: onErr });
 
     expect(r).toEqual('err');
     expect(onErr).toHaveBeenCalledTimes(1);

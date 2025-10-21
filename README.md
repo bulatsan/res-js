@@ -38,7 +38,7 @@ bun add @bulatlib/res
     - `orElse(fn)` — if `Err`, evaluate `fn(err): Res<T>`; otherwise keep original `Ok`.
     - `unwrapOr(default)` — return `T` or `default`.
     - `unwrapOrElse(fn)` — return `T` or `fn(err)`.
-    - `match(okFn, errFn)` — pattern match and return a value of one of callbacks.
+    - `match({ ok, err })` — pattern match and return a value of one of callbacks.
     - `res()` — return raw `Res<T>`.
 
 - **Utilities**
