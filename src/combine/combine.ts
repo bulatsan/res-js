@@ -6,7 +6,18 @@ type ResDataList<ResList extends readonly Res<unknown>[]> = {
 
 export function combine<ResList extends readonly Res<unknown>[]>(
   ...results: ResList
+): Res<ResDataList<ResList>>;
+export function combine<ResList extends readonly Res<unknown>[]>(
+  results: ResList,
+): Res<ResDataList<ResList>>;
+export function combine<ResList extends readonly Res<unknown>[]>(
+  ...args: [ResList] | ResList
 ): Res<ResDataList<ResList>> {
+  const results =
+    args.length === 1 && Array.isArray(args[0])
+      ? (args[0] as ResList)
+      : (args as ResList);
+
   const combined = [];
 
   for (const r of results) {

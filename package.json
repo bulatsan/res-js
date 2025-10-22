@@ -1,7 +1,7 @@
 {
   "name": "@bulatlib/res",
   "author": "bulatsan",
-  "version": "0.0.18",
+  "version": "0.0.19",
   "description": "Rust style Result for TypeScript",
   "license": "MIT",
   "private": false,

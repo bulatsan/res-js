@@ -2,7 +2,7 @@ import { and, andThen } from '@/and';
 import { map, mapErr, mapOr, mapOrElse } from '@/map';
 import { match } from '@/match';
 import { or, orElse } from '@/or';
-import { type Res } from '@/res';
+import { type Res, err, ok } from '@/res';
 import { unwrap, unwrapOr, unwrapOrElse } from '@/unwrap';
 import { wrap } from '@/wrap/wrap';
 
@@ -49,6 +49,8 @@ export type Pipe<IT> = Res<IT> & {
 };
 
 export const pipe = {
+  ok: <IT>(value: IT) => pipefn(ok(value)),
+  err: <IT>(error: Error) => pipefn<IT>(err(error)),
   from: <IT>(self: Res<IT>) => pipefn(self),
   wrap: <IT>(fn: () => IT) => pipefn(wrap(fn)),
 
